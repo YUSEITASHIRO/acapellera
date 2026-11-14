@@ -30,16 +30,18 @@ import { lyricsToSyllables } from "../../wasm/engine.ts";
 import { sungWords, wordAt, type Melody, type SungWords } from "../../show/words.ts";
 import type { OverlayFn } from "./AnatomyView.tsx";
 
-interface ShowFile {
+export interface ShowFile {
   title: string;
   audio: string;
   bpm?: number;
   downbeat?: number;
   spell?: Record<string, string>;
   voices: { name: string; tele: string; melody?: string }[];
+  /** Acapellera's stage: the song's sections from SongFormer */
+  sections?: { label: string; start: number; end: number }[];
 }
 
-interface Loaded {
+export interface Loaded {
   show: ShowFile;
   voices: { name: string; track: TeleTrack; words: SungWords | null }[];
 }
@@ -53,7 +55,29 @@ async function fetchOk(url: string): Promise<Response> {
   return r;
 }
 
-const clock = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+export const clock = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+
+/** a show folder (`…/shows/<id>/`) into its voices, its mix loaded into `transport` (shared with Acapellera's stage) */
+export async function loadShow(base: string, transport: Transport): Promise<Loaded> {
+  const show = (await (await fetchOk(base + "show.json")).json()) as ShowFile;
+  if (!show.voices?.length || !show.audio) throw new Error("show.json needs audio and voices");
+  const [audio, ...teles] = await Promise.all([fetchOk(base + show.audio).then((r) => r.arrayBuffer()), ...show.voices.map((v) => fetchOk(base + v.tele).then((r) => r.arrayBuffer()))]);
+  // the words: syllables as the CLI splits them (the pronouncing dictionary first, as it does)
+  const melodies = await Promise.all(show.voices.map((v) => (v.melody ? fetchOk(base + v.melody).then((r) => r.json() as Promise<Melody>) : null)));
+  if (melodies.some(Boolean)) await g2p.load().catch(() => {});
+  const words = melodies.map((m) => {
+    if (!m) return null;
+    try {
+      return sungWords(m, lyricsToSyllables(m.lyrics), show.spell);
+    } catch (e) {
+      console.warn("duet: no words for a voice:", e);
+      return null;
+    }
+  });
+  const voices = show.voices.map((v, i) => ({ name: v.name, track: new TeleTrack(teles[i]), words: words[i] }));
+  await transport.load(audio);
+  return { show, voices };
+}
 
 export function DuetPage(props: { id: string }) {
   const base = `${import.meta.env.BASE_URL}shows/${props.id}/`;
@@ -73,26 +97,9 @@ export function DuetPage(props: { id: string }) {
     if (!transport) return;
     let live = true;
     setLoaded(null);
-    (async () => {
-      const show = (await (await fetchOk(base + "show.json")).json()) as ShowFile;
-      if (!show.voices?.length || !show.audio) throw new Error("show.json needs audio and voices");
-      const [audio, ...teles] = await Promise.all([fetchOk(base + show.audio).then((r) => r.arrayBuffer()), ...show.voices.map((v) => fetchOk(base + v.tele).then((r) => r.arrayBuffer()))]);
-      // the words: syllables as the CLI splits them (the pronouncing dictionary first, as it does)
-      const melodies = await Promise.all(show.voices.map((v) => (v.melody ? fetchOk(base + v.melody).then((r) => r.json() as Promise<Melody>) : null)));
-      if (melodies.some(Boolean)) await g2p.load().catch(() => {});
-      const words = melodies.map((m) => {
-        if (!m) return null;
-        try {
-          return sungWords(m, lyricsToSyllables(m.lyrics), show.spell);
-        } catch (e) {
-          console.warn("duet: no words for a voice:", e);
-          return null;
-        }
-      });
-      const voices = show.voices.map((v, i) => ({ name: v.name, track: new TeleTrack(teles[i]), words: words[i] }));
-      await transport.load(audio);
-      if (live) setLoaded({ show, voices });
-    })().catch((e: unknown) => live && setError(e instanceof Error ? e.message : String(e)));
+    loadShow(base, transport)
+      .then((l) => live && setLoaded(l))
+      .catch((e: unknown) => live && setError(e instanceof Error ? e.message : String(e)));
     return () => {
       live = false;
     };
@@ -149,13 +156,14 @@ export function DuetPage(props: { id: string }) {
   );
 }
 
-/** one voice's head; the last of several turns to face the others */
-function Head(props: { name: string; track: TeleTrack; words: SungWords | null; show: ShowFile; transport: Transport; facing: 1 | -1 }) {
+/** one voice's head; the last of several turns to face the others. `decor` and `color` are the sing
+ * stage's (a hat at the crown, the words in the part's colour). */
+export function Head(props: { name: string; track: TeleTrack; words: SungWords | null; show: ShowFile; transport: Transport; facing: 1 | -1; decor?: HeadFeed["decor"]; color?: string; className?: string; zoomOut?: number; lower?: number }) {
   const { track, show, transport, words } = props;
   const feedRef = useRef<HeadFeed | null>(null);
   // the syllable at the mouth, written on the side the face looks to
   const overlayRef = useRef<OverlayFn | undefined>(undefined);
-  if (words && !overlayRef.current) overlayRef.current = mouthWords(() => wordAt(words, transport.time()), V.green, props.facing);
+  if (words && !overlayRef.current) overlayRef.current = mouthWords(() => wordAt(words, transport.time()), props.color ?? V.green, props.facing);
   if (!feedRef.current) {
     const model = getModel(track.body, track.sampleRate);
     const beatStep = (t: number) => {
@@ -168,6 +176,9 @@ function Head(props: { name: string; track: TeleTrack; words: SungWords | null; 
       view: VIEW,
       maxDpr: 1.5,
       facing: props.facing,
+      decor: props.decor,
+      zoomOut: props.zoomOut,
+      lower: props.lower,
       frame: () => {
         const t = transport.time();
         const i = track.indexAt(t);
@@ -179,7 +190,7 @@ function Head(props: { name: string; track: TeleTrack; words: SungWords | null; 
     };
   }
   return (
-    <Screen className="duet-head" focus title={props.name} sub={bodyLabel(track.body)} label={`${props.name} voice, ${bodyLabel(track.body)}, in 3D`}>
+    <Screen className={props.className ?? "duet-head"} focus title={props.name} sub={bodyLabel(track.body)} label={`${props.name} voice, ${bodyLabel(track.body)}, in 3D`}>
       <AnatomyView3D feed={feedRef.current} readouts={false} overlay={overlayRef.current} />
     </Screen>
   );

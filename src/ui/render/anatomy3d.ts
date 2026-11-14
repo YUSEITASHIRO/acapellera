@@ -644,6 +644,10 @@ export class Anatomy3D {
   /** which way the turned home view shows the face: 1 to the right, −1 to the left (a duet's
    *  second head, so the two sing towards each other) */
   facing: 1 | -1 = 1;
+  /** Acapellera's stage: the camera this many times further away, aimed this many cm lower,
+   *  so a body drawn under the neck fits the screen */
+  zoomOut = 1;
+  lower = 0;
   private clock = 0;
   private readonly gaze = new Gaze();
   /** brows, lids, cheeks and the head's nods, from the voice (the view updates it) */
@@ -704,8 +708,9 @@ export class Anatomy3D {
     const r = this.restFor(model);
     const half = Math.tan((this.camera.fov * Math.PI) / 360);
     // fit the head's height (and its width in a narrow screen) at a male's size, so bodies compare
-    const d = 1.1 * Math.max(15.2 / half, 11 / (half * Math.max(0.3, this.camera.aspect)));
+    const d = this.zoomOut * 1.1 * Math.max(15.2 / half, 11 / (half * Math.max(0.3, this.camera.aspect)));
     const target = r.center.clone();
+    target.y -= this.lower;
     // facing left: the same three-quarter view from the head's other side
     const az = this.facing > 0 ? 0.62 : Math.PI - 0.62, el = 0.2;
     return {
@@ -732,6 +737,13 @@ export class Anatomy3D {
     const [x0, y0] = this.project(x, y, z);
     const [x1, y1] = this.project(x + e[0], y + e[1], z + e[2]);
     return Math.hypot(x1 - x0, y1 - y0);
+  }
+
+  /** Acapellera's stage: the bottom of the neck on screen, at the head's centre line, and the scale there */
+  neckBase(model: VoiceModel): { x: number; y: number; cmPx: number } {
+    const rest = this.restFor(model);
+    const [x, y] = this.project(rest.center.x, rest.head.y0, 0);
+    return { x, y, cmPx: this.pxPerCmAt(rest.center.x, rest.head.y0, 0) };
   }
 
   /** the top of the head on screen (CSS px) and the head's scale there (px per body cm) */

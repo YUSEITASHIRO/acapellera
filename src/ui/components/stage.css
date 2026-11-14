@@ -1,0 +1,173 @@
+/* Local addition: the sing stage (StagePage.tsx). Built on the duet page's frame (.duet-top, .duet-bar). */
+.stage {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  height: 100vh;
+  height: 100dvh;
+  padding: 6px 16px max(10px, env(safe-area-inset-bottom));
+  background: #000;
+}
+.stage.drag .stage-floor {
+  outline: 2px dashed var(--amber, #ffb340);
+  outline-offset: -6px;
+}
+
+.stage-floor {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #133954;
+}
+
+/* back (chorus squad and drums, small) at the top, front (harmony, the lead largest in the middle) at the bottom */
+.stage-rows {
+  position: absolute;
+  inset: 7% 0 0; /* below the valance, which stays when the curtain opens */
+  display: grid;
+  grid-template-rows: minmax(0, 0.75fr) minmax(0, 1.55fr);
+  /* room between the rows, so the lead does not cover the back row when it grows: the lead grows from its feet by up to 14% of the front row (LIFT_SCALE 1.14), about 8% of this box; 11% leaves
+     it clear of the back row */
+  row-gap: 11%;
+}
+.stage-row {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 6px;
+  justify-self: center;
+  min-height: 0;
+}
+.stage-back { width: 100%; } /* the chorus squad's bass and guitar four, the three drums, the chorus squad's piano two */
+/* do, lead, ree: the lead's column as wide as when it stood alone (44%), each harmony as wide as in the old middle row (22%) */
+.stage-front { width: 88%; grid-template-columns: 1fr 2fr 1fr; }
+.stage-row > .stage-head {
+  min-height: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.15s;
+}
+.stage-row > .stage-head.lit { opacity: 1; } /* each part with its own light cue (StagePage PARTS.light) */
+/* no light cones: a part only appears, with the light's sound */
+/* no frames on the stage */
+.stage .stage-head.screen { border: none; }
+/* no black box behind each singer: the head is
+   drawn on black (AnatomyView3D), so it is laid over the stage in "screen" mode, where black shows what is behind it.
+   Where two singers overlap their lines add up (the front one does not hide the back one). */
+.stage .stage-head.screen { background: transparent; mix-blend-mode: screen; }
+.stage-lead {
+  transform-origin: 50% 100%;
+  transition: opacity 0.5s ease 0.15s, transform 0.6s ease;
+}
+/* where the song lifts the lead steps up, by StagePage's LIFT_SCALE (chorus 1.14, pre-chorus 1.05) */
+.stage-front > .stage-lead { transform: scale(var(--lead-scale, 1)); z-index: 1; }
+/* the harmony smaller than the lead (a head is sized by its cell's height, which the front row shares): the lead
+   about 1.5 times the harmony, as when they stood in rows of their own */
+.stage-front > .stage-head:not(.stage-lead) { transform: scale(0.65); transform-origin: 50% 100%; }
+
+/* the curtain: two halves of glowing red fold lines on black (the heads' vector style), parting to the
+   sides when the show starts; an amber valance stays above */
+.curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.curtain-half {
+  position: absolute;
+  top: 0;
+  /* the halves overlap by 12% in the middle, the right one (in front) over the left (behind), so the seam does
+     not open when they sway */
+  width: 56%;
+  height: 100%;
+  /* a canvas (StagePage CurtainHalf): its fold lines are drawn and swayed there; it moves for as long as
+     curtain03.mp3 sounds (1.7 s) */
+  transition: transform 1.7s cubic-bezier(0.5, 0, 0.3, 1);
+}
+.curtain-half.left { left: 0; }
+.curtain-half.right { right: 0; }
+.curtain.open .curtain-half.left { transform: translateX(-101%); }
+.curtain.open .curtain-half.right { transform: translateX(101%); }
+.curtain-valance {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7%;
+  fill: rgba(0, 0, 0, 0.94);
+  stroke: #ffb340;
+  stroke-width: 1.6;
+  filter: drop-shadow(0 0 3px rgba(255, 179, 64, 0.8));
+}
+.curtain-valance path { vector-effect: non-scaling-stroke; }
+
+/* in front of the curtain: the call to drop, the step and the %, Play, the server's lines */
+.stage-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px;
+  text-align: center;
+}
+.stage-call,
+.stage-step {
+  margin: 0;
+  padding: 2px 14px;
+  background: rgba(0, 0, 0, 0.78);
+  font-size: clamp(18px, 3vw, 30px);
+  letter-spacing: 0.12em;
+  color: #fff3dc;
+  text-shadow: 0 0 12px rgba(255, 179, 64, 0.7);
+}
+.stage-pct { color: #ffb340; font-variant-numeric: tabular-nums; }
+.stage-bar {
+  width: min(560px, 80%);
+  height: 10px;
+  border: 1px solid #ffb340;
+}
+.stage-bar > div {
+  height: 100%;
+  background: #ffb340;
+  box-shadow: 0 0 10px #ffb340;
+  transition: width 0.4s linear;
+}
+.stage-log {
+  margin: 0;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.78);
+  max-width: min(820px, 92%);
+  max-height: 9.5em;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: left;
+  white-space: pre-wrap;
+  color: rgba(238, 246, 248, 0.75);
+}
+.stage-error { margin: 0; color: #ff5d40; }
+/* notes after the song only, never under Play */
+.stage-notice { margin: 0; padding: 4px 12px; background: rgba(0, 0, 0, 0.78); color: #ffb340; font-size: 13px; }
+/* outranks styles.css's button.primary.large */
+.stage-panel button.primary.large.stage-play { font-size: 30px; padding: 18px 64px; letter-spacing: 0.2em; }
+
+.stage-download {
+  flex: none;
+  margin-left: auto;
+  padding: 6px 12px;
+  border: 1px solid #5be381;
+  color: #5be381;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+}
+.stage-download.big {
+  margin: 0;
+  padding: 10px 22px;
+  font-size: 15px;
+  background: rgba(0, 0, 0, 0.78);
+}
+.stage-download.off { border-color: transparent; color: rgba(238, 246, 248, 0.5); }

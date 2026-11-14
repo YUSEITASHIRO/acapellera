@@ -28,6 +28,8 @@ import type { TelemetryMessage } from "../../worklet/protocol.ts";
  * body's model and view flags, and each frame's telemetry. `tele` null holds the head in `artic`
  * with the voice at rest; a new `epoch` (a seek) drops the face's and the airflow's history.
  */
+type Anchor = { x: number; y: number; cmPx: number };
+
 export interface HeadFeed {
   model: VoiceModel;
   view: ViewFlags;
@@ -36,6 +38,11 @@ export interface HeadFeed {
   maxDpr?: number;
   /** which way the head turns to show its face (see Anatomy3D.facing) */
   facing?: 1 | -1;
+  /** Acapellera's stage: something worn, drawn each frame from the crown and the neck's base (CSS px) */
+  decor?: (ctx: CanvasRenderingContext2D, at: { crown: Anchor; neck: Anchor; w: number; h: number }, facing: 1 | -1) => void;
+  /** Acapellera's stage: see Anatomy3D.zoomOut and .lower */
+  zoomOut?: number;
+  lower?: number;
 }
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -76,6 +83,8 @@ export function AnatomyView3D(props: { slots?: SlotsFn; info?: InfoFn; showForma
     const r = new Anatomy3D();
     r.centred = !readoutsRef.current;
     r.facing = feedRef.current?.facing ?? 1;
+    r.zoomOut = feedRef.current?.zoomOut ?? 1;
+    r.lower = feedRef.current?.lower ?? 0;
     const glow = new Glow();
     const camera = r.camera;
     const controls = new OrbitControls(camera, canvas);
@@ -238,6 +247,7 @@ export function AnatomyView3D(props: { slots?: SlotsFn; info?: InfoFn; showForma
         overlayRef.current?.(ctx, r.faceView(m, f, a), m, f, a, { w, h, dt });
         // the hearts start beside the crown on the side the face looks to, and drift that way
         crown = r.crown(m);
+        if (feedRef.current?.decor) feedRef.current.decor(ctx, { crown, neck: r.neckBase(m), w, h }, r.facing);
         pet.update(elapsed, [crown.x + r.facing * 7 * crown.cmPx, crown.y + 0.5 * crown.cmPx], crown.cmPx);
         pet.draw(ctx, r.facing, crown.cmPx);
         glow.apply(canvas, ctx, dpr);

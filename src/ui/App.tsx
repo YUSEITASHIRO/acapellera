@@ -26,6 +26,8 @@ import { bodyLabel, presetOf, PRESETS } from "./body.ts";
 const AnatomyView3D = lazy(() => import("./components/AnatomyView3D.tsx").then((m) => ({ default: m.AnatomyView3D })));
 // the duet page (`?show=<id>`): two 3D heads replaying a pre-rendered song
 const DuetPage = lazy(() => import("./components/DuetPage.tsx").then((m) => ({ default: m.DuetPage })));
+// Acapellera's stage (`?stage=<port>`): drop a song, twelve heads sing it a cappella (acapellera/README.md)
+const StagePage = lazy(() => import("./components/StagePage.tsx").then((m) => ({ default: m.StagePage })));
 
 /** the show to play, from `?show=<id>` (a plain folder name under public/shows) */
 function showId(): string | null {
@@ -220,6 +222,14 @@ export function App() {
     return (
       <Suspense fallback={null}>
         <DuetPage id={show} />
+      </Suspense>
+    );
+  // `?stage=<port>`: the stage, talking to acapellera/drop_server.py on that local port
+  const stage = Number(new URLSearchParams(window.location.search).get("stage"));
+  if (Number.isInteger(stage) && stage > 0)
+    return (
+      <Suspense fallback={null}>
+        <StagePage port={stage} />
       </Suspense>
     );
   return <Wall />;
