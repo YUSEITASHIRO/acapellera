@@ -62,8 +62,8 @@
 /* where the song lifts the lead steps up, by StagePage's LIFT_SCALE (chorus 1.14, pre-chorus 1.05) */
 .stage-front > .stage-lead { transform: scale(var(--lead-scale, 1)); z-index: 1; }
 /* the harmony smaller than the lead (a head is sized by its cell's height, which the front row shares): the lead
-   about 1.5 times the harmony, as when they stood in rows of their own */
-.stage-front > .stage-head:not(.stage-lead) { transform: scale(0.65); transform-origin: 50% 100%; }
+   a little larger than the harmony */
+.stage-front > .stage-head:not(.stage-lead) { transform: scale(0.85); transform-origin: 50% 100%; }
 
 /* the curtain: two halves of glowing red fold lines on black (the heads' vector style), parting to the
    sides when the show starts; an amber valance stays above */

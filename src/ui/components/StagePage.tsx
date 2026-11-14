@@ -37,26 +37,28 @@ const SONG_AFTER = 1.0; // s from the last light to the song
 
 /** voice order in show.json (make_sing.py): see PARTS. One uniform for all; the colour
  *  only by group (vocal, harmony, the rest); the colours are my choice. */
-const GROUP = { vocal: V.amber, harmony: V.green, drums: V.pink, chorus: V.white };
+// the chorus squad coloured by instrument, in colours used nowhere else on the stage (piano white)
+const GROUP = { vocal: V.amber, harmony: V.green, drums: V.pink, bass: "#a98bff", guitar: "#f5e663", piano: V.white };
 // `at`: the place in its row, left to right
 // show.json's order (make_sing.py): lead, do, ree, bah, pa, si, then the chorus squad zoo, di, no, ku, ru, mi
 // Two rows: the back row zoo di no ku bah pa si ru mi, the front row do, lead, ree (the lead largest).
 // `light` is the cue (1-3) with which the part appears: the back row, then the harmony, then the lead.
-const PARTS: { color: string; row: 0 | 1; at: number; light: 1 | 2 | 3 }[] = [
-  { color: GROUP.vocal, row: 1, at: 1, light: 3 },
-  { color: GROUP.harmony, row: 1, at: 0, light: 2 },
-  { color: GROUP.harmony, row: 1, at: 2, light: 2 },
-  { color: GROUP.drums, row: 0, at: 4, light: 1 },
-  { color: GROUP.drums, row: 0, at: 5, light: 1 },
-  { color: GROUP.drums, row: 0, at: 6, light: 1 },
+// `label`: the name shown over the head, the part's job
+const PARTS: { color: string; row: 0 | 1; at: number; light: 1 | 2 | 3; label: string }[] = [
+  { color: GROUP.vocal, row: 1, at: 1, light: 3, label: "Lead" },
+  { color: GROUP.harmony, row: 1, at: 0, light: 2, label: "Harmony 1" },
+  { color: GROUP.harmony, row: 1, at: 2, light: 2, label: "Harmony 2" },
+  { color: GROUP.drums, row: 0, at: 4, light: 1, label: "Kick" },
+  { color: GROUP.drums, row: 0, at: 5, light: 1, label: "Snare" },
+  { color: GROUP.drums, row: 0, at: 6, light: 1, label: "Hi-hat" },
   // the chorus squad in the drums' back row, in white: bass zoo, di and guitar no, ku on the left of the drums,
   // piano ru, mi on the right
-  { color: GROUP.chorus, row: 0, at: 0, light: 1 },
-  { color: GROUP.chorus, row: 0, at: 1, light: 1 },
-  { color: GROUP.chorus, row: 0, at: 2, light: 1 },
-  { color: GROUP.chorus, row: 0, at: 3, light: 1 },
-  { color: GROUP.chorus, row: 0, at: 7, light: 1 },
-  { color: GROUP.chorus, row: 0, at: 8, light: 1 },
+  { color: GROUP.bass, row: 0, at: 0, light: 1, label: "Bass low" },
+  { color: GROUP.bass, row: 0, at: 1, light: 1, label: "Bass high" },
+  { color: GROUP.guitar, row: 0, at: 2, light: 1, label: "Guitar low" },
+  { color: GROUP.guitar, row: 0, at: 3, light: 1, label: "Guitar high" },
+  { color: GROUP.piano, row: 0, at: 7, light: 1, label: "Piano low" },
+  { color: GROUP.piano, row: 0, at: 8, light: 1, label: "Piano high" },
 ];
 // the camera pulled back and aimed lower so the uniform shows under the head (checked on the stage pictures)
 const ZOOM_OUT = 1.45;
@@ -500,7 +502,7 @@ export function StagePage(props: { port: number }) {
                     <Head
                       key={i}
                       className={`duet-head stage-head${i === 0 ? " stage-lead" : ""}${lit >= PARTS[i].light ? " lit" : ""}`}
-                      name={v.name.replace(/ \(.*\)$/, "")} /* the syllable only: nine long names overlapped in the back row */
+                      name={PARTS[i]?.label ?? v.name}
                       track={v.track}
                       words={v.words}
                       show={loaded.show}

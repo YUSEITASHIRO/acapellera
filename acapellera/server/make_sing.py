@@ -142,7 +142,11 @@ REST_MIN = 0.5  # s
 
 # The lead's same-pitch runs: inside a run of one pitch there is no rest (RESING decides held or sung again there),
 # however long the gap; the rest is judged only before the run's first note and after its last.
+# Except a long gap, an interlude: a gap of RUN_GAP_MAX or more inside a run is a rest after the earlier note is held
+# on for RUN_TAIL; the two are then never joined into one (merge_same).
 RUN_NO_REST = {"lead": True}
+RUN_GAP_MAX = 2.0  # s
+RUN_TAIL = 1.5     # s
 
 
 def legato(notes, env_db=None, same_pitch_runs=False):
@@ -150,12 +154,21 @@ def legato(notes, env_db=None, same_pitch_runs=False):
     Judged on the part's own notes, not on its stem's level (on the stem, a harmony taken from the vocals would never
     rest while the lead sang).
     `env_db` is no longer used here (kept so the callers stay as they were). With `same_pitch_runs`, a gap between
-    two notes of the same pitch is always held over (RUN_NO_REST)."""
+    two notes of the same pitch is held over when under RUN_GAP_MAX; a longer one holds the earlier note RUN_TAIL more,
+    then rests (RUN_NO_REST)."""
     if not notes:
         return notes, 0
     out, held = [list(n) for n in notes], 0
     for a, b in zip(out, out[1:]):
-        if a[1] < b[0] and (b[0] < a[1] + REST_MIN - 1e-9 or (same_pitch_runs and a[2] == b[2])):  # under REST_MIN held
+        if a[1] >= b[0]:
+            continue
+        if same_pitch_runs and a[2] == b[2]:
+            if b[0] - a[1] < RUN_GAP_MAX - 1e-9:
+                a[1] = b[0]
+            else:  # an interlude: held a little, then a rest
+                a[1] = min(a[1] + RUN_TAIL, b[0])
+            held += 1
+        elif b[0] < a[1] + REST_MIN - 1e-9:  # under REST_MIN held
             a[1] = b[0]
             held += 1
     return out, held
@@ -441,7 +454,7 @@ def main(notes_path: Path, show_id: str, title: str = "", out_dir: str = "", pro
         m, j, d = mono(lane)
         if JOIN_SAME[name]:
             m, same[name] = merge_same(m, env.get("vocals"), src.get("onset", {}).get("vocals"), RESING[name],
-                                       float("inf") if RUN_NO_REST.get(name) else None)
+                                       RUN_GAP_MAX if RUN_NO_REST.get(name) else None)
         else:
             same[name] = 0
         m, held[name] = legato(m, same_pitch_runs=RUN_NO_REST.get(name, False))

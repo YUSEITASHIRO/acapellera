@@ -25,9 +25,10 @@ assert mel["lyrics"] == "do do"
 from make_sing import legato, rank_lanes
 held, n = legato([[0, 0.5, 60, 1], [0.6, 1.0, 61, 1], [1.49, 2.5, 64, 1], [3.0, 4.0, 65, 1]])
 assert [n_[1] for n_ in held] == [0.6, 1.49, 2.5, 4.0] and n == 2, held  # 0.1 and 0.49 held, 0.5 a rest
-# legato with same-pitch runs (the lead): a 3 s gap between two notes of one pitch is held, one between pitches a rest
-held, n = legato([[0, 1, 60, 1], [4, 5, 60, 1], [8, 9, 62, 1]], same_pitch_runs=True)
-assert [n_[1] for n_ in held] == [4, 5, 9] and n == 1, held
+# legato with same-pitch runs (the lead): a 0.5 s gap of one pitch held; a 3 s gap of one pitch (2 s or more)
+# held 1.5 s more, then a rest; a 3 s gap between two pitches a rest, nothing added
+held, n = legato([[0, 1, 60, 1], [1.5, 2, 60, 1], [5, 6, 60, 1], [9, 10, 62, 1]], same_pitch_runs=True)
+assert [n_[1] for n_ in held] == [1.5, 3.5, 6, 10] and n == 2, held
 # rank_lanes: the strongest at each moment to the lead, the next to do, the next to ree, a fourth dropped
 ev = [[0, 1, 60, 0.9], [0, 1, 64, 0.5], [0, 1, 67, 0.7], [0, 1, 72, 0.3], [1, 2, 62, 0.4]]
 lead_, do_, ree_ = rank_lanes(ev, 3)
