@@ -1,0 +1,7 @@
+# the worker's packages besides torch/torchaudio (install those first, from the PyTorch index for your CUDA or CPU)
+demucs @ git+https://github.com/adefossez/demucs
+basic-pitch
+onnxruntime
+librosa
+soundfile
+numpy
