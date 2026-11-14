@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Acapellera</title>
-<meta name="description" content="曲をドロップすると、12 人の合成音声の団員がアカペラで歌い直すアプリ。団員ごとの担当と処理の紹介。CHIMERA の上に作られています。">
+<meta name="description" content="曲をドロップすると、12 人の合成音声の団員がアカペラで歌い直すアプリ。CHIMERA の上に作られています。">
 <style>
 :root {
   --bg: #07090c; --panel: #10151b; --line: #1d2a36; --text: #dfe7ee; --dim: #8b9aa8;
@@ -25,30 +25,24 @@ h1 { font-size: clamp(38px, 8vw, 64px); letter-spacing: 0.1em; margin: 0; font-w
 .sub { color: var(--dim); margin: 4px 0 0; font-size: 14px; }
 .repo { display: inline-block; margin-top: 14px; padding: 8px 16px; border: 1px solid var(--blue); border-radius: 8px; text-decoration: none; }
 .repo:hover { background: var(--panel); }
-h2 { font-size: 19px; letter-spacing: 0.14em; margin: 60px 0 6px; padding-bottom: 6px; border-bottom: 1px solid var(--line); font-weight: 500; }
-.h2note { color: var(--dim); font-size: 14px; margin: 0 0 18px; }
-h3 { font-size: 15px; letter-spacing: 0.12em; margin: 34px 0 12px; font-weight: 600; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-h3 small { color: var(--dim); font-weight: 400; letter-spacing: 0.04em; font-size: 13px; }
+h2 { font-size: 19px; letter-spacing: 0.14em; margin: 56px 0 14px; padding-bottom: 6px; border-bottom: 1px solid var(--line); font-weight: 500; }
+h3 { font-size: 15px; letter-spacing: 0.12em; margin: 30px 0 10px; font-weight: 600; color: var(--c); }
+h3 small { color: var(--dim); font-weight: 400; letter-spacing: 0.04em; font-size: 13px; margin-left: 8px; }
 .shot { margin: 26px 0 0; }
 .shot img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; }
 .shot figcaption { color: var(--dim); font-size: 13px; margin-top: 6px; }
 
-.roster { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
-.member { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 10px; padding: 14px; }
-.member img { width: 96px; height: 116px; object-fit: cover; object-position: 50% 20%; border-radius: 6px; background: #000; display: block; }
-.member .name { font-size: 22px; font-weight: 600; color: var(--c); letter-spacing: 0.06em; line-height: 1.2; }
-.member .role { color: var(--dim); font-size: 13px; margin: 2px 0 8px; }
-.member dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; font-size: 13.5px; }
-.member dt { color: var(--dim); white-space: nowrap; }
-.member dd { margin: 0; }
-.featured { grid-column: 1 / -1; grid-template-columns: 150px minmax(0, 1fr); }
-.featured img { width: 150px; height: 190px; }
-@media (max-width: 520px) { .featured { grid-template-columns: 96px minmax(0, 1fr); } .featured img { width: 96px; height: 122px; } }
+.roster { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); }
+.member { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 10px; padding: 12px; }
+.member img { width: 72px; height: 88px; object-fit: cover; object-position: 50% 20%; border-radius: 6px; background: #000; display: block; }
+.member .name { font-size: 20px; font-weight: 600; color: var(--c); letter-spacing: 0.06em; line-height: 1.2; }
+.member .role { color: var(--dim); font-size: 13px; }
+.member p { margin: 4px 0 0; font-size: 14px; }
+.featured { grid-column: 1 / -1; grid-template-columns: 120px minmax(0, 1fr); }
+.featured img { width: 120px; height: 150px; }
 .vocal { --c: var(--amber); } .harmony { --c: var(--green); } .drums { --c: var(--pink); } .chorus { --c: var(--white); }
+.common { color: var(--dim); font-size: 14px; margin: 18px 0 0; }
 
-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0; }
-th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { color: var(--dim); font-weight: 500; font-size: 13px; white-space: nowrap; }
 .flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 14px 0; }
 .step { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 14px; }
 .step b { display: block; color: var(--amber); font-weight: 500; }
@@ -56,7 +50,6 @@ th { color: var(--dim); font-weight: 500; font-size: 13px; white-space: nowrap; 
 @media (max-width: 680px) { .flow { grid-template-columns: 1fr 1fr; } }
 pre { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; font-size: 13px; line-height: 1.6; }
 code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
-.note { border-left: 3px solid var(--green); padding: 2px 0 2px 14px; }
 footer { margin-top: 64px; color: var(--dim); font-size: 13px; }
 </style>
 </head>
@@ -64,194 +57,72 @@ footer { margin-top: 64px; color: var(--dim); font-size: 13px; }
 <main>
   <h1>Acapellera</h1>
   <p class="lead-text">曲のファイルをドロップすると、12 人の団員がその曲をアカペラで歌い直します。</p>
-  <p class="sub">団員の声はすべて CHIMERA の物理モデル（肺・声帯・声道・唇の数値シミュレーション）による合成音声です。元の録音は再生しません。</p>
+  <p class="sub">声はすべて CHIMERA の物理モデルによる合成音声です。元の録音は流しません。</p>
   <a class="repo" href="https://github.com/YUSEITASHIRO/acapellera">GitHub でソースを見る →</a>
 
-  <figure class="shot"><img src="stage.png" width="1440" height="860" alt="演奏中の舞台。奥の段に 9 人、手前の段の中央にリード、その左右にハモリ。全員同じ制服で、色だけがパートごとに違う。"><figcaption>演奏中の舞台。顔の動きは、各団員の声を合成したときの声道の形です。</figcaption></figure>
+  <figure class="shot"><img src="stage.png" width="1440" height="860" alt="演奏中の舞台。奥の段に 9 人、手前の段の中央にリード、その左右にハモリ。"><figcaption>演奏中の舞台。顔の動きは各団員の声道の形です。</figcaption></figure>
 
   <h2>団員紹介</h2>
-  <p class="h2note">12 人、4 パート。担当と処理はすべて <code>acapellera/server/make_sing.py</code> の現在の設定値です。</p>
 
-  <h3 class="vocal">リード <small>1 人・手前の段の中央</small></h3>
+  <h3 class="vocal">リード<small>手前の中央</small></h3>
   <div class="roster">
     <div class="member vocal featured">
-      <img src="members/lead.png" alt="リードの団員。橙の制服。">
+      <img src="members/lead.png" alt="リードの団員">
       <div>
         <div class="name">Lead</div>
         <div class="role">主旋律</div>
-        <dl>
-          <dt>元の音</dt><dd>分離した歌声の音符のうち、その時刻でいちばん強い音</dd>
-          <dt>言葉</dt><dd>音の高さで決まる。ド=mi、レ=pa、ミ=zoo、ファ=di、ソ=ree、ラ=ru、シ=ma（# の付く音は元の音と同じ言葉）</dd>
-          <dt>同じ音程</dt><dd>続くときは、歌声の音量の落ち込みが 2 dB 以上で、かつ新しい歌い出しの強さが曲の上位 50% なら言い直し、それ以外は 1 音につなげて伸ばす</dd>
-          <dt>休符</dt><dd>次の音まで 0.5 秒以上空いたら休符。同じ音程が続く間は休符にしない</dd>
-          <dt>音量</dt><dd>+8 dB（全パートで最大）。1 音ずつの音量補正はしない</dd>
-          <dt>表示</dt><dd>サビで 1.14 倍、サビ前で 1.05 倍に大きくなる</dd>
-        </dl>
+        <p>歌声の中でいちばん強い音を歌います。歌う言葉は音の高さで変わります。同じ音が続くところでは、元の歌声から、伸ばすか言い直すかを判断します。サビでは姿も声も前に出ます。</p>
       </div>
     </div>
   </div>
 
-  <h3 class="harmony">ハモリ <small>2 人・手前の段の左右</small></h3>
+  <h3 class="harmony">ハモリ<small>手前の左右</small></h3>
   <div class="roster">
-    <div class="member harmony">
-      <img src="members/do.png" alt="ハモリ do の団員。緑の制服。">
-      <div>
-        <div class="name">do</div>
-        <div class="role">ハモリ（左）</div>
-        <dl>
-          <dt>元の音</dt><dd>歌声で 2 番目に強い音</dd>
-          <dt>言葉</dt><dd>do</dd>
-          <dt>同じ音程</dt><dd>毎回言い直す</dd>
-          <dt>音量</dt><dd>−2 dB、1 音ずつ聞こえ方をそろえる</dd>
-        </dl>
-      </div>
-    </div>
-    <div class="member harmony">
-      <img src="members/ree.png" alt="ハモリ ree の団員。緑の制服。">
-      <div>
-        <div class="name">ree</div>
-        <div class="role">ハモリ（右）</div>
-        <dl>
-          <dt>元の音</dt><dd>歌声で 3 番目に強い音</dd>
-          <dt>言葉</dt><dd>ree</dd>
-          <dt>同じ音程</dt><dd>毎回言い直す</dd>
-          <dt>音量</dt><dd>−2 dB、1 音ずつ聞こえ方をそろえる</dd>
-        </dl>
-      </div>
-    </div>
+    <div class="member harmony"><img src="members/do.png" alt="ハモリ do の団員"><div><div class="name">do</div><div class="role">ハモリ</div><p>歌声で 2 番目に強い音を歌います。</p></div></div>
+    <div class="member harmony"><img src="members/ree.png" alt="ハモリ ree の団員"><div><div class="name">ree</div><div class="role">ハモリ</div><p>歌声で 3 番目に強い音を歌います。</p></div></div>
   </div>
 
-  <h3 class="drums">ドラム <small>3 人・奥の段の中央</small></h3>
+  <h3 class="drums">ドラム<small>奥の中央</small></h3>
   <div class="roster">
-    <div class="member drums">
-      <img src="members/bah.png" alt="ドラム bah の団員。ピンクの制服。">
-      <div>
-        <div class="name">bah</div>
-        <div class="role">キック</div>
-        <dl>
-          <dt>元の音</dt><dd>ドラム音の 20〜150 Hz 帯の鳴り始め</dd>
-          <dt>声</dt><dd>男性、G2（98 Hz）固定</dd>
-          <dt>長さ</dt><dd>最長 0.15 秒、次の打音で切る</dd>
-          <dt>音量</dt><dd>−5 dB</dd>
-        </dl>
-      </div>
-    </div>
-    <div class="member drums">
-      <img src="members/pa.png" alt="ドラム pa の団員。ピンクの制服。">
-      <div>
-        <div class="name">pa</div>
-        <div class="role">スネア</div>
-        <dl>
-          <dt>元の音</dt><dd>150〜2500 Hz 帯の鳴り始め</dd>
-          <dt>声</dt><dd>女性、A3（220 Hz）固定</dd>
-          <dt>長さ</dt><dd>最長 0.12 秒</dd>
-          <dt>音量</dt><dd>−5 dB</dd>
-        </dl>
-      </div>
-    </div>
-    <div class="member drums">
-      <img src="members/si.png" alt="ドラム si の団員。ピンクの制服。">
-      <div>
-        <div class="name">si</div>
-        <div class="role">ハイハット</div>
-        <dl>
-          <dt>元の音</dt><dd>6000〜11025 Hz 帯の鳴り始め</dd>
-          <dt>声</dt><dd>子ども、D5（587 Hz）固定</dd>
-          <dt>長さ</dt><dd>最長 0.08 秒</dd>
-          <dt>音量</dt><dd>−5 dB</dd>
-        </dl>
-      </div>
-    </div>
+    <div class="member drums"><img src="members/bah.png" alt="ドラム bah の団員"><div><div class="name">bah</div><div class="role">キック</div><p>ドラムの低い音を短く刻みます。</p></div></div>
+    <div class="member drums"><img src="members/pa.png" alt="ドラム pa の団員"><div><div class="name">pa</div><div class="role">スネア</div><p>ドラムの中くらいの音を刻みます。</p></div></div>
+    <div class="member drums"><img src="members/si.png" alt="ドラム si の団員"><div><div class="name">si</div><div class="role">ハイハット</div><p>ドラムの高い音を刻みます。</p></div></div>
   </div>
 
-  <h3 class="chorus">コーラス隊 <small>6 人・奥の段の両側</small></h3>
+  <h3 class="chorus">コーラス隊<small>奥の両側</small></h3>
   <div class="roster">
-    <div class="member chorus">
-      <img src="members/zoo.png" alt="コーラス隊 zoo の団員。白の制服。">
-      <div>
-        <div class="name">zoo</div>
-        <div class="role">ベース（低い方）</div>
-        <dl><dt>元の音</dt><dd>ベース音で、その時刻に強い 2 音のうち低い方</dd><dt>言葉</dt><dd>zoo</dd></dl>
-      </div>
-    </div>
-    <div class="member chorus">
-      <img src="members/di.png" alt="コーラス隊 di の団員。白の制服。">
-      <div>
-        <div class="name">di</div>
-        <div class="role">ベース（高い方）</div>
-        <dl><dt>元の音</dt><dd>ベース音で、強い 2 音のうち高い方</dd><dt>言葉</dt><dd>di</dd></dl>
-      </div>
-    </div>
-    <div class="member chorus">
-      <img src="members/no.png" alt="コーラス隊 no の団員。白の制服。">
-      <div>
-        <div class="name">no</div>
-        <div class="role">ギター（低い方）</div>
-        <dl><dt>元の音</dt><dd>ギター音で、強い 2 音のうち低い方</dd><dt>言葉</dt><dd>no</dd></dl>
-      </div>
-    </div>
-    <div class="member chorus">
-      <img src="members/ku.png" alt="コーラス隊 ku の団員。白の制服。">
-      <div>
-        <div class="name">ku</div>
-        <div class="role">ギター（高い方）</div>
-        <dl><dt>元の音</dt><dd>ギター音で、強い 2 音のうち高い方</dd><dt>言葉</dt><dd>ku</dd></dl>
-      </div>
-    </div>
-    <div class="member chorus">
-      <img src="members/ru.png" alt="コーラス隊 ru の団員。白の制服。">
-      <div>
-        <div class="name">ru</div>
-        <div class="role">ピアノ（低い方）</div>
-        <dl><dt>元の音</dt><dd>ピアノ音で、強い 2 音のうち低い方</dd><dt>言葉</dt><dd>ru</dd></dl>
-      </div>
-    </div>
-    <div class="member chorus">
-      <img src="members/mi.png" alt="コーラス隊 mi の団員。白の制服。">
-      <div>
-        <div class="name">mi</div>
-        <div class="role">ピアノ（高い方）</div>
-        <dl><dt>元の音</dt><dd>ピアノ音で、強い 2 音のうち高い方</dd><dt>言葉</dt><dd>mi</dd></dl>
-      </div>
-    </div>
+    <div class="member chorus"><img src="members/zoo.png" alt="コーラス隊 zoo の団員"><div><div class="name">zoo</div><div class="role">ベース・下</div><p>ベースの低い方の音を歌います。</p></div></div>
+    <div class="member chorus"><img src="members/di.png" alt="コーラス隊 di の団員"><div><div class="name">di</div><div class="role">ベース・上</div><p>ベースの高い方の音を歌います。</p></div></div>
+    <div class="member chorus"><img src="members/no.png" alt="コーラス隊 no の団員"><div><div class="name">no</div><div class="role">ギター・下</div><p>ギターの低い方の音を歌います。</p></div></div>
+    <div class="member chorus"><img src="members/ku.png" alt="コーラス隊 ku の団員"><div><div class="name">ku</div><div class="role">ギター・上</div><p>ギターの高い方の音を歌います。</p></div></div>
+    <div class="member chorus"><img src="members/ru.png" alt="コーラス隊 ru の団員"><div><div class="name">ru</div><div class="role">ピアノ・下</div><p>ピアノの低い方の音を歌います。</p></div></div>
+    <div class="member chorus"><img src="members/mi.png" alt="コーラス隊 mi の団員"><div><div class="name">mi</div><div class="role">ピアノ・上</div><p>ピアノの高い方の音を歌います。</p></div></div>
   </div>
-  <p class="h2note" style="margin-top:12px">コーラス隊 6 人に共通：同じ音程でも毎回言い直す、音量 −2 dB、1 音ずつ聞こえ方をそろえる。</p>
 
-  <h3>全団員に共通の決まり</h3>
-  <table>
-    <tr><th>声の種類</th><td>ドラム以外は、受け持つ音符の高さの中央値で決める（G3 未満は男性、A#4 未満は女性、A#4 以上は子ども）。声の音域に入らない音は、オクターブだけ移す</td></tr>
-    <tr><th>休符</th><td>ドラム以外は、自分の次の音まで 0.5 秒未満なら前の音を伸ばしてつなぎ、0.5 秒以上なら休符にする</td></tr>
-    <tr><th>短い音</th><td>0.08 秒未満の音は、直前の音のすぐ後なら前の音に含め、そうでなければ省く</td></tr>
-    <tr><th>音量補正</th><td>リード以外は、1 音ずつ、書き出した音のスペクトルに等ラウドネス曲線（ISO 226、60 phon）の重みをかけて聞こえる大きさを測り、パート内の平均にそろえる（最大 ±12 dB）</td></tr>
-    <tr><th>曲の区間</th><td>SongFormer で区間を推定し、サビで +3 dB、サビ前で +1 dB を全員に一律でかける</td></tr>
-    <tr><th>登場順</th><td>Play の後、照明の音 3 回に合わせて、奥の段 → ハモリ → リードの順に登場する</td></tr>
-  </table>
+  <p class="common">ドラム以外の団員は、音と音の間をつないで歌い、間が空いたところで休みます。声の種類（男性・女性・子ども）は受け持つ音域で決まります。音の高さによる聞こえ方の差は補正し、サビでは全員の声が大きくなります。</p>
 
   <h2>処理の流れ</h2>
   <div class="flow">
-    <div class="step"><b>1. 分離</b><span>demucs（htdemucs_6s）で歌声・ドラム・ベース・ギター・ピアノ・その他に分ける</span></div>
-    <div class="step"><b>2. 採譜</b><span>basic-pitch で 4 種を音符にする。ドラムは 3 帯域の鳴り始め。区間は SongFormer</span></div>
-    <div class="step"><b>3. 割り振り</b><span>強さの順に 12 人へ割り当て、休符・同じ音程・音量を決める</span></div>
-    <div class="step"><b>4. 合成</b><span>CHIMERA の CLI で 12 人分を全コア並列に合成し、混ぜて舞台に送る</span></div>
+    <div class="step"><b>分離</b><span>曲を歌声・ドラム・ベース・ギター・ピアノに分ける（demucs）</span></div>
+    <div class="step"><b>採譜</b><span>音符と、サビなどの区間を取り出す（basic-pitch、SongFormer）</span></div>
+    <div class="step"><b>割り振り</b><span>音符を強さの順に 12 人へ割り当てる</span></div>
+    <div class="step"><b>合成</b><span>12 人の声を並列に合成して舞台に送る（CHIMERA）</span></div>
   </div>
-  <p>GPU サーバ（11 GB）で 188 秒の曲を処理した例：分離 7.6 秒、採譜 6.2 秒、合成 58.8 秒、ドロップから再生準備まで 82 秒。</p>
 
   <h2>動かし方</h2>
-  <p>このページは紹介のみで、何にも接続せず、曲も受け取りません。アプリは自分の PC で動かします。分離・採譜・合成は、同じ PC でも、ssh でつながる GPU サーバでも実行できます。</p>
+  <p>アプリは自分の PC で動かします。重い処理は同じ PC でも、ssh でつながる GPU サーバでも実行できます。このページは紹介のみで、曲を受け取りません。ドロップした曲は自分の PC とサーバの外には出ません。</p>
   <pre><code>git clone https://github.com/YUSEITASHIRO/acapellera
 cd acapellera
 bun install
-bash acapellera/server/setup.sh          # 処理側の Python 環境（初回のみ）
-bash acapellera/server/setup_engine.sh   # CHIMERA の CLI（初回のみ）
+bash acapellera/server/setup.sh          # 処理側の環境（初回のみ）
+bash acapellera/server/setup_engine.sh   # 合成エンジン（初回のみ）
 python acapellera/launch.py              # GPU サーバで処理するときは --remote</code></pre>
-  <p>詳しい手順（Windows、GPU サーバの設定、任意の効果音）は <a href="https://github.com/YUSEITASHIRO/acapellera/blob/main/acapellera/README.md">acapellera/README.md</a>。</p>
-  <p class="note">ドロップした曲と、そこから作った歌は、自分の PC と自分のサーバの中にだけ置かれ、git には入りません。</p>
+  <p>詳しくは <a href="https://github.com/YUSEITASHIRO/acapellera/blob/main/acapellera/README.md">acapellera/README.md</a>。</p>
 
   <h2>クレジット</h2>
-  <p>合成音声・エンジン・Web アプリ：<a href="https://github.com/jamesondh/chimera-vocal-synth">CHIMERA</a>（Jameson Hodge、MIT）。分離：<a href="https://github.com/adefossez/demucs">demucs</a>（MIT）。採譜：<a href="https://github.com/spotify/basic-pitch">basic-pitch</a>（Apache-2.0）。区間：<a href="https://github.com/ASLP-lab/SongFormer">SongFormer</a>（CC BY 4.0）。</p>
-  <p>効果音：開演ブザーと照明の音は <a href="https://otologic.jp/">OtoLogic</a>（CC BY 4.0）。客席のざわめきと幕の音は配布元の規約により同梱していません（入手先は README に記載）。</p>
+  <p><a href="https://github.com/jamesondh/chimera-vocal-synth">CHIMERA</a>（Jameson Hodge、MIT）、<a href="https://github.com/adefossez/demucs">demucs</a>（MIT）、<a href="https://github.com/spotify/basic-pitch">basic-pitch</a>（Apache-2.0）、<a href="https://github.com/ASLP-lab/SongFormer">SongFormer</a>（CC BY 4.0）。効果音の一部は <a href="https://otologic.jp/">OtoLogic</a>（CC BY 4.0）。</p>
 
-  <footer>Acapellera（MIT License、CHIMERA と同じ）・<a href="https://github.com/YUSEITASHIRO/acapellera">GitHub</a></footer>
+  <footer>Acapellera（MIT License）・<a href="https://github.com/YUSEITASHIRO/acapellera">GitHub</a></footer>
 </main>
 </body>
 </html>
