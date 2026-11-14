@@ -38,6 +38,8 @@ th { color: var(--dim); font-weight: 500; font-size: 13px; }
 pre { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; font-size: 13.5px; line-height: 1.6; }
 code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
 .note { border-left: 3px solid var(--green); padding: 4px 0 4px 14px; color: var(--text); }
+.repo { display: inline-block; margin-top: 8px; padding: 8px 16px; border: 1px solid var(--blue); border-radius: 8px; text-decoration: none; }
+.repo:hover { background: var(--panel); }
 .shot { margin: 28px 0 8px; }
 .shot img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; }
 .shot figcaption { color: var(--dim); font-size: 13px; margin-top: 6px; }
@@ -49,6 +51,7 @@ footer { margin-top: 64px; color: var(--dim); font-size: 13px; }
   <h1>Acapellera</h1>
   <p class="lead">好きな曲をドロップすると、12 人の歌い手がその曲をアカペラで歌い直します。</p>
   <p class="sub">声はすべて、肺・声帯・のど・口をシミュレーションして作った合成音声です。元の録音は一切流れません。</p>
+  <p><a class="repo" href="https://github.com/YUSEITASHIRO/acapellera">GitHub でソースを見る →</a></p>
 
   <figure class="shot"><img src="stage.png" width="1440" height="860" alt="歌っている舞台。奥の段に 9 人、手前の段の中央に大きくリード、その左右にハモリ。全員同じ制服で、色だけがパートごとに違う。リードの口元に今歌っている言葉が出ている。"><figcaption>歌っている舞台（顔の動きは、それぞれの声の合成と同時に計算した声道の形です）</figcaption></figure>
 
@@ -108,7 +111,7 @@ python acapellera/launch.py              # GPU サーバで処理するときは
   <p>合成音声・エンジン・Web アプリは <a href="https://github.com/jamesondh/chimera-vocal-synth">CHIMERA</a>（Jameson Hodge、MIT ライセンス）の上に作られています。分離は <a href="https://github.com/adefossez/demucs">demucs</a>（MIT）、採譜は <a href="https://github.com/spotify/basic-pitch">basic-pitch</a>（Apache-2.0）、区間は <a href="https://github.com/ASLP-lab/SongFormer">SongFormer</a>（CC BY 4.0）を使っています。</p>
   <p>効果音：開演ブザーと照明の音は <a href="https://otologic.jp/">OtoLogic</a>（CC BY 4.0）。客席のざわめきと幕の音は、配布元の規約に従い同梱していません（入手先は README に記載）。</p>
 
-  <footer>Acapellera（MIT License、CHIMERA と同じ）</footer>
+  <footer>Acapellera（MIT License、CHIMERA と同じ）・<a href="https://github.com/YUSEITASHIRO/acapellera">GitHub</a></footer>
 </main>
 </body>
 </html>
