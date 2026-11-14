@@ -8,3 +8,11 @@ src/wasm/chimera.wasm
 
 # duet shows (?show=<id>) are made locally and are never published: often covers of songs we have no rights to
 public/shows/
+
+# Acapellera: optional stage sounds you supply yourself (public/stage-sfx/CREDITS.md)
+public/stage-sfx/hall.mp3
+public/stage-sfx/curtain03.mp3
+# Acapellera: your server settings and the songs you drop stay on your machine
+acapellera/remote.json
+acapellera/in/
+__pycache__/

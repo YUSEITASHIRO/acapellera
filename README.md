@@ -1,3 +1,10 @@
+# Acapellera, on CHIMERA
+
+This repository is a copy of [CHIMERA](https://github.com/jamesondh/chimera-vocal-synth) by Jameson Hodge (MIT),
+with its full history, plus **Acapellera**: drop a song on a stage page and twelve CHIMERA singers sing it back a
+cappella. Acapellera lives in [`acapellera/`](acapellera/README.md) (with the stage page in
+`src/ui/components/StagePage.tsx`); everything below is CHIMERA's own README.
+
 # CHIMERA
 
 A physical-modeling voice synthesizer in the browser. Every sound comes from a simulated
