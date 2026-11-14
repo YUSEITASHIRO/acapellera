@@ -550,17 +550,12 @@ export function StagePage(props: { port: number }) {
                 </div>
               </>
             )}
-            {/* Play alone, large, nothing under it; the notes are shown after the song only */}
+            {/* Play alone, large, nothing under it; no notes on the page at all */}
             {phase === "ready" && (
               <button className="primary large stage-play" onClick={curtainUp}>
                 Play
               </button>
             )}
-            {phase === "ended" && (status?.notices ?? []).map((n) => (
-              <p key={n} className="stage-notice">
-                {n}
-              </p>
-            ))}
             {error && <p className="stage-error">{error}</p>}
             {status && (phase === "making" || error) && <pre className="stage-log">{status.lines.slice(-4).join("\n")}</pre>}
           </div>
