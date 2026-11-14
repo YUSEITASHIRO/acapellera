@@ -32,11 +32,6 @@ DOING = {"受信": "曲を受け取りました", "送信": "曲を送ってい�
          "回収": "舞台に運んでいます", "完了": "準備ができました"}
 
 
-# Made, but not quite as asked: one plain line each (analyze.py's secs["notes"])
-NOTES = {"no_sections": "曲の区切り（サビなど）が取れなかったので、サビでの強調なしで作りました",
-         "short_window": "曲が長いので、曲の区切りは簡易な方法で取りました"}
-
-
 def plain(err: str) -> str:
     """An error, as what happened and what to do."""
     e = err.lower()
@@ -108,8 +103,6 @@ def run(song: Path, show: str, name: str):
         if r.status != 200:
             raise RuntimeError("worker: " + r.read().decode(errors="replace")[-1500:])
         say(f"worker の内訳 (s): {r.getheader('X-Seconds')}")
-        for n in json.loads(r.getheader("X-Seconds") or "{}").get("notes", []):
-            job["notices"].append(NOTES.get(n, n))  # shown after the song only, never under Play (StagePage)
         size, buf = int(r.getheader("Content-Length")), bytearray()
         while chunk := r.read(1 << 16):
             buf += chunk
